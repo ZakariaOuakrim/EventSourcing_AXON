@@ -4,23 +4,18 @@ import lombok.AllArgsConstructor;
 import ma.enset.cqrsaxon.commenApi.commands.CreateAccountCommand;
 import ma.enset.cqrsaxon.commenApi.dto.CreateAccountDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/commands/account")
+@AllArgsConstructor
 public class AccountCommandController {
     private CommandGateway commandGateway;
 
-    public AccountCommandController(CommandGateway commandGateway) {
-        this.commandGateway = commandGateway;
-
-    }
     @PostMapping("/create")
     public CompletableFuture<String> createAccount(@RequestBody CreateAccountDTO request){
      CompletableFuture<String> result= commandGateway.send(new CreateAccountCommand(
@@ -29,5 +24,10 @@ public class AccountCommandController {
                 request.initialBalance()
         ));
      return result;
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity exceptionHandler(Exception exception){
+        return ResponseEntity.internalServerError().body(exception.getMessage());
     }
 }
