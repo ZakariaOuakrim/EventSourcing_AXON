@@ -17,6 +17,10 @@ public class AccountEventHandlerService {
     private AccountRepository accountRepository;
     private TransactionRepository transactionRepository;
 
+    public AccountEventHandlerService(AccountRepository accountRepository, TransactionRepository transactionRepository) {
+        this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
+    }
     @EventHandler
     public void on(AccountCreatedEvent event, EventMessage<AccountCreatedEvent> eventMessage){
         log.info("**********************");
