@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import ma.enset.cqrsaxon.commenApi.commands.CreateAccountCommand;
 import ma.enset.cqrsaxon.commenApi.dto.CreateAccountDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +14,13 @@ import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/commands/account")
-@AllArgsConstructor
 public class AccountCommandController {
     private CommandGateway commandGateway;
 
+    public AccountCommandController(CommandGateway commandGateway) {
+        this.commandGateway = commandGateway;
+
+    }
     @PostMapping("/create")
     public CompletableFuture<String> createAccount(@RequestBody CreateAccountDTO request){
      CompletableFuture<String> result= commandGateway.send(new CreateAccountCommand(
